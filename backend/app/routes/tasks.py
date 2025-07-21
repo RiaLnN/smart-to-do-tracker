@@ -1,8 +1,12 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from ..models.task import Task
 from .. import db
 
 tasks_bp = Blueprint("tasks", __name__)
+
+@tasks_bp.route("/")
+def page():
+    return render_template("base.html")
 
 @tasks_bp.route("/", methods=["GET"])
 def get_tasks():
