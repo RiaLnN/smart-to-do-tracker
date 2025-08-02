@@ -14,15 +14,21 @@ def create_app():
     login_manager.init_app(app)
 
     from .models.user import User  
-    from .routes.tasks import tasks_bp, page
+    from .models.task import Task  # Import Task model
+    from .routes.tasks import tasks_bp
     from .auth.routes import auth_bp
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    app.register_blueprint(page)
-    app.register_blueprint(tasks_bp, url_prefix="/api/tasks")
+    # Register tasks blueprint without URL prefix for home page
+    app.register_blueprint(tasks_bp)
+    # Keep auth blueprint with prefix
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+
+    # Create database tables
+    with app.app_context():
+        db.create_all()
 
     return app
