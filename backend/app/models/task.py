@@ -5,7 +5,7 @@ class Task(db.Model):
     __tablename__ = "task"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     due_date = db.Column(db.DateTime)
