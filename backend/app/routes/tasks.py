@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template, url_for, redirect
+from flask_login import login_required
 from ..models.task import Task
 from .. import db
 
