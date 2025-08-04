@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="mt-6 p-4 bg-white shadow rounded">
+    <h3 class="font-bold text-lg">Complete Tasks</h3>
+
+    {% if tasks %}
+        <ul>
+        {% for task in tasks %}
+            <li>
+                {% if task.completed %}
+                    <span>{{ task.title }} - {{ task.description }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No tasks found.</p>
+    {% endif %}
+</div>
+{% endblock %}

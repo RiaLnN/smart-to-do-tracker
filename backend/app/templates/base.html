@@ -12,7 +12,18 @@
 
     <!-- Navbar -->
     <nav class="bg-blue-600 text-white p-4">
-        <h1 class="text-lg font-bold">Smart Task Planner</h1>
+      <div class="flex justify-between items-center">
+        <div>
+          <a href="{{ url_for('tasks.index') }}">
+            <h1 class="text-lg font-bold">Smart Task Planner</h1>
+          </a>
+        </div>
+        <div>
+          <a href="{{ url_for('tasks.complete_task') }}">
+            <h1 class="text-lg font-bold">Complete Tasks</h1>
+          </a>
+        </div>
+      </div>
     </nav>
 
     <!-- Main Content -->

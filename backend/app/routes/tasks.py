@@ -7,8 +7,7 @@ tasks_bp = Blueprint("tasks", __name__)
 
 @tasks_bp.route("/")
 def index():
-    tasks = Task.query.all()
-    print(tasks)  # Debug
+    tasks = Task.query.filter_by(completed=False).all()
     return render_template("index.html", tasks=tasks)
 
 
@@ -25,6 +24,59 @@ def add():
     db.session.add(task)
     db.session.commit()
     return redirect(url_for('tasks.index'))
+
+@tasks_bp.route("/complete_task")
+def complete_task():
+    tasks = Task.query.all()
+    return render_template("complete.html", tasks=tasks)
+
+@tasks_bp.route("/description", methods=["GET"])
+def description():
+    task_id = request.args.get("task_id")
+    if not task_id:
+        return "Task ID is required", 400
+    task = Task.query.get(task_id)
+    if not task:
+        return "Task not found", 404
+    return render_template("description.html", task=task)
+
+@tasks_bp.route("/complete", methods=["POST"])
+def complete():
+    task_id = request.form.get("task_id")  # get task id from form data
+    if not task_id:
+        return "Task ID is required", 400
+
+    # Find the task by id
+    task = Task.query.get(task_id)
+    if not task:
+        return "Task not found", 404
+
+    # Mark it as completed
+    task.completed = True
+
+    # Save changes to the database
+    db.session.commit()
+
+    return redirect(url_for('tasks.index'))
+
+
+@tasks_bp.route("/delete", methods=["POST"])
+def delete():
+    task_id = request.form.get("task_id")  # get task id from form data
+    if not task_id:
+        return "Task ID is required", 400
+
+    # Find the task by id
+    task = Task.query.get(task_id)
+    if not task:
+        return "Task not found", 404
+
+    # Delete the task
+    db.session.delete(task)
+    db.session.commit()
+
+    return redirect(url_for('tasks.index'))
+
 
 # @tasks_bp.route("/tasks", methods=["GET"])
 # def get_tasks():
