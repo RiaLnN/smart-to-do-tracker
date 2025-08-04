@@ -7,6 +7,7 @@ tasks_bp = Blueprint("tasks", __name__)
 
 
 @tasks_bp.route("/")
+
 def index():
     tasks = Task.query.filter_by(completed=False).all()
     return render_template("index.html", tasks=tasks)

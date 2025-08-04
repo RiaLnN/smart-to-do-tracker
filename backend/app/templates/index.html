@@ -1,41 +1,77 @@
 {% extends "base.html" %}
 {% block content %}
-<h2 class="text-2xl font-semibold mb-4">Your Tasks</h2>
 
-<!-- Example button -->
-<a href="{{ url_for('tasks.index_task') }}">
-    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-      Add New Task
-    </button>
-</a>
-<div>
-    <ul class="mt-6 p-4 bg-white shadow rounded">
+<!-- Dashboard Container -->
+<div class="p-6 bg-gray-100 min-h-screen">
+
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white shadow rounded-lg p-4">
+            <h3 class="text-gray-500 text-sm">Total tasks</h3>
+            <p class="text-2xl font-bold">{{ total_tasks }}</p>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4">
+            <h3 class="text-gray-500 text-sm">Active tasks</h3>
+            <p class="text-2xl font-bold text-blue-500">{{ active_tasks }}</p>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4">
+            <h3 class="text-gray-500 text-sm">Completed</h3>
+            <p class="text-2xl font-bold text-green-500">{{ completed_tasks }}</p>
+        </div>
+        <div class="bg-white shadow rounded-lg p-4">
+            <h3 class="text-gray-500 text-sm">Overdue</h3>
+            <p class="text-2xl font-bold text-red-500">{{ overdue_tasks }}</p>
+        </div>
+    </div>
+
+
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">All</button>
+            <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">Active</button>
+            <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">Completed</button>
+        </div>
+        <a href="{{ url_for('tasks.index_task') }}">
+            <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">+ Add task</button>
+        </a>
+    </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for task in tasks %}
-            <div class="flex justify-between items-center border-4 border-sky-500 rounded-lg mb-2 mt-2">
-                    <div class="p-4 text-2xl">
-                        <form action="{{ url_for('tasks.description') }}" method="get">
-                            <input type="hidden" name="task_id" value="{{ task.id }}">
-                            <button type="submit">
-                                {{ task.title }}
-                            </button>
-                        </form>
-                    </div>
-                    <div class="p-4">
-                        <form method="POST" action="{{ url_for('tasks.complete') }}">
-                            <input type="hidden" name="task_id" value="{{ task.id }}">
-                            <button type="submit"  class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 m-2">Complete</button>
-                        </form>
-
-                        <form method="POST" action="{{ url_for('tasks.delete') }}">
-                            <input type="hidden" name="task_id" value="{{ task.id }}">
-                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 m-2">Delete</button>
-                        </form>
-                    </div>
+            <div class="bg-white p-4 rounded-lg shadow flex flex-col justify-between hover:shadow-lg transition cursor-pointer"
+             onclick="window.location='{{ url_for('tasks.description', task_id=task.id) }}'">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800">{{ task.title }}</h3>
+                {% if task.due_date %}
+                    <p class="text-sm text-gray-500">Deadline: {{ task.due_date.strftime('%d.%m.%Y') }}</p>
+                {% endif %}
+                {% if task.priority %}
+                    <span class="inline-block mt-2 px-2 py-1 text-xs rounded
+                        {% if task.priority == 'High' %}bg-red-100 text-red-600
+                        {% elif task.priority == 'Medium' %}bg-yellow-100 text-yellow-600
+                        {% else %}bg-green-100 text-green-600{% endif %}">
+                        {{ task.priority }}
+                    </span>
+                {% endif %}
             </div>
+            <div class="mt-4 flex justify-between">
+                <form method="POST" action="{{ url_for('tasks.complete') }}">
+                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">✔ Complete</button>
+                </form>
+                <form method="POST" action="{{ url_for('tasks.delete') }}">
+                    <input type="hidden" name="task_id" value="{{ task.id }}">
+                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">🗑 Delete</button>
+                </form>
+            </div>
+        </div>
 
         {% else %}
-            <li>No tasks yet</li>
+            <p class="text-gray-500">No task yet</p>
         {% endfor %}
-    </ul>
+    </div>
+
 </div>
+
 {% endblock %}

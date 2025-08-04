@@ -6,4 +6,7 @@
     {% else %}
         <p>No description available.</p>
     {% endif %}
+    <form action="{{ url_for('tasks.index') }}">
+        <button  class="bg-red-500 text-white px-10 py-2 rounded hover:bg-red-700 mt-6">Back</button>
+    </form>
 {% endblock %}
