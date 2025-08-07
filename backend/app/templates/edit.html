@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-900">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Task</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-full text-white">
+
+    <div class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-md w-full bg-gray-800 p-6 rounded-lg shadow-lg">
+
+            <h1 class="text-2xl font-bold mb-6 text-center text-white">Edit Task</h1>
+
+            <form method="POST" class="space-y-4">
+                {% if csrf_token %}
+                    {{ csrf_token() }}
+                {% endif %}
+
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-300">Title</label>
+                    <input type="text" name="title" id="title" value="{{ task.title }}"
+                           class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-300">Description</label>
+                    <textarea name="description" id="description" rows="4"
+                              class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">{{ task.description }}</textarea>
+                </div>
+                <div>
+                    <label for="due_date" class="block text-sm font-medium text-gray-300">Due Date</label>
+                    <input type="date" name="due_date" id="due_date"
+                        value="{% if task %}{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '' }}{% else %}{{ due_date }}{% endif %}"
+                        class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="priority" class="block text-sm font-medium text-gray-300">Priority</label>
+                    <select name="priority" id="priority"
+                            class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Select Priority</option>
+                        <option value="High" {% if task.priority == 'High' %}selected{% endif %}>High</option>
+                        <option value="Medium" {% if task.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="Low" {% if task.priority == 'Low' %}selected{% endif %}>Low</option>
+                    </select>
+                </div>
+
+                <div class="flex justify-between mt-6">
+                    <a href="{{ url_for('tasks.index_task') }}"
+                       class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded">
+                        ← Back
+                    </a>
+                    <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                        Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+</html>

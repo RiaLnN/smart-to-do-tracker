@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<head>
+    <script>
+        const events = {{ events | tojson }};
+    </script>
+</head>
+
+<body class="bg-gray-900 text-white font-sans p-6">
+
+    <div class="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow p-4">
+        <h1 class="text-2xl font-bold mb-6 text-white">📅 Calendar</h1>
+        <div class="grid grid-cols-7 text-center text-sm text-gray-400 mb-6">
+          <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+        </div>
+        <div id="calendar" class="grid grid-cols-7 gap-2"></div>
+    </div>
+    <script>
+        const DateTime = luxon.DateTime;
+
+        const calendar = document.getElementById('calendar');
+        const now = DateTime.now();
+        const daysInMonth = now.daysInMonth;
+
+        const startOfMonth = now.startOf('month');
+        const startWeekday = startOfMonth.weekday % 7;
+
+        for (let i = 0; i < startWeekday; i++) {
+            calendar.innerHTML += `<div></div>`;
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = now.set({ day }).toFormat('yyyy-MM-dd');
+
+            const todaysEvents = events.filter(e => e.due_date === dateStr);
+
+            let tasksHTML = "";
+            todaysEvents.forEach(event => {
+                let priorityClass = "bg-blue-600"; // default
+                if (event.priority === "High") priorityClass = "bg-red-600";
+                else if (event.priority === "Medium") priorityClass = "bg-yellow-500 text-black";
+                else if (event.priority === "Low") priorityClass = "bg-green-600";
+
+
+                tasksHTML += `<a href="/tasks/${event.id}/edit" class="${priorityClass} text-white text-xs rounded px-1 mt-1 block truncate hover:underline">${event.title}</a>`;
+            });
+
+
+            if (todaysEvents.length > 0) {
+                calendar.innerHTML += `
+                    <div class="border border-gray-600 rounded p-2 bg-gray-700 h-24 hover:bg-gray-600 transition cursor-default">
+                        <div class="font-bold text-sm text-white">${day}</div>
+                        ${tasksHTML}
+                    </div>
+                `;
+            } else {
+                calendar.innerHTML += `
+                    <a href="/tasks/add?due_date=${dateStr}" class="border border-gray-600 rounded p-2 bg-gray-700 h-24 hover:bg-gray-600 transition block">
+                        <div class="font-bold text-sm text-white">${day}</div>
+                    </a>
+                `;
+            }
+        }
+    </script>
+</body>
+{% endblock %}

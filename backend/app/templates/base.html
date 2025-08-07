@@ -8,9 +8,10 @@
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.3.0/build/global/luxon.min.js"></script>
 </head>
 <body class="h-full">
-
+    {% set current_page = request.endpoint %}
     <!-- Navbar -->
     <nav class="bg-gray-800">
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -34,12 +35,32 @@
             </div>
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
-                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <a href="{{ url_for('tasks.index') }}" aria-current="page" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-                <a href="{{ url_for('tasks.complete_task') }}" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Complete</a>
-                <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">not now</a>
-                <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">not now</a>
-              </div>
+                <a href="{{ url_for('tasks.index_task') }}"
+                   class="rounded-md px-3 py-2 text-sm font-medium
+                          {% if current_page == 'tasks.index_task' %}bg-gray-900 text-white
+                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                    Dashboard
+                </a>
+
+                <a href="{{ url_for('tasks.calendar') }}"
+                   class="rounded-md px-3 py-2 text-sm font-medium
+                          {% if current_page == 'tasks.calendar' %}bg-gray-900 text-white
+                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                    Calendar
+                </a>
+                <a href="#"
+                   class="rounded-md px-3 py-2 text-sm font-medium
+                          {% if current_page == 'tasks.summary' %}bg-gray-900 text-white
+                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                    Summary
+                </a>
+                  <a href="#"
+                   class="rounded-md px-3 py-2 text-sm font-medium
+                          {% if current_page == 'tasks.not' %}bg-gray-900 text-white
+                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
+                    not now
+                </a>
+            </div>
             </div>
           </div>
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">

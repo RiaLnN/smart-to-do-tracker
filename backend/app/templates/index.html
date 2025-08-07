@@ -2,73 +2,80 @@
 {% block content %}
 
 <!-- Dashboard Container -->
-<div class="p-6 bg-gray-100 min-h-screen">
+<div class="p-6 bg-gray-900 min-h-screen text-white">
 
-
+    <!-- Статистика -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white shadow rounded-lg p-4">
-            <h3 class="text-gray-500 text-sm">Total tasks</h3>
+        <div class="bg-gray-800 shadow rounded-lg p-4">
+            <h3 class="text-gray-400 text-sm">Total tasks</h3>
             <p class="text-2xl font-bold">{{ total_tasks }}</p>
         </div>
-        <div class="bg-white shadow rounded-lg p-4">
-            <h3 class="text-gray-500 text-sm">Active tasks</h3>
-            <p class="text-2xl font-bold text-blue-500">{{ active_tasks }}</p>
+        <div class="bg-gray-800 shadow rounded-lg p-4">
+            <h3 class="text-gray-400 text-sm">Active tasks</h3>
+            <p class="text-2xl font-bold text-blue-400">{{ active_tasks }}</p>
         </div>
-        <div class="bg-white shadow rounded-lg p-4">
-            <h3 class="text-gray-500 text-sm">Completed</h3>
-            <p class="text-2xl font-bold text-green-500">{{ completed_tasks }}</p>
+        <div class="bg-gray-800 shadow rounded-lg p-4">
+            <h3 class="text-gray-400 text-sm">Completed</h3>
+            <p class="text-2xl font-bold text-green-400">{{ completed_tasks }}</p>
         </div>
-        <div class="bg-white shadow rounded-lg p-4">
-            <h3 class="text-gray-500 text-sm">Overdue</h3>
-            <p class="text-2xl font-bold text-red-500">{{ overdue_tasks }}</p>
+        <div class="bg-gray-800 shadow rounded-lg p-4">
+            <h3 class="text-gray-400 text-sm">Overdue</h3>
+            <p class="text-2xl font-bold text-red-400">{{ overdue_tasks }}</p>
         </div>
     </div>
 
-
+    <!-- Кнопки фильтров -->
     <div class="flex justify-between items-center mb-6">
-        <div>
-            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">All</button>
-            <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">Active</button>
-            <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">Completed</button>
+        <div class="space-x-2">
+            <a href="{{ url_for('tasks.index_task', filter='all') }}">
+                <button class="{% if filter == 'all' %}bg-blue-600 text-white{% else %}bg-gray-700 text-gray-300{% endif %} px-4 py-2 rounded hover:bg-blue-700">All</button>
+            </a>
+            <a href="{{ url_for('tasks.index_task', filter='active') }}">
+                <button class="{% if filter == 'active' %}bg-blue-600 text-white{% else %}bg-gray-700 text-gray-300{% endif %} px-4 py-2 rounded hover:bg-blue-700">Active</button>
+            </a>
+            <a href="{{ url_for('tasks.index_task', filter='completed') }}">
+                <button class="{% if filter == 'completed' %}bg-blue-600 text-white{% else %}bg-gray-700 text-gray-300{% endif %} px-4 py-2 rounded hover:bg-blue-700">Completed</button>
+            </a>
         </div>
-        <a href="{{ url_for('tasks.index_task') }}">
-            <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">+ Add task</button>
-        </a>
+        <form action="{{ url_for('tasks.add') }}" method="POST">
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">+ Add task</button>
+        </form>
     </div>
 
-
+    <!-- Карточки задач -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for task in tasks %}
-            <div class="bg-white p-4 rounded-lg shadow flex flex-col justify-between hover:shadow-lg transition cursor-pointer"
-             onclick="window.location='{{ url_for('tasks.description', task_id=task.id) }}'">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-800">{{ task.title }}</h3>
-                {% if task.due_date %}
-                    <p class="text-sm text-gray-500">Deadline: {{ task.due_date.strftime('%d.%m.%Y') }}</p>
-                {% endif %}
-                {% if task.priority %}
+            <div class="{% if task.completed %} bg-blue-300 text-gray-600 line-through {% else %} bg-gray-800 text-white {% endif %} p-4 rounded-lg shadow flex flex-col justify-between hover:shadow-lg transition cursor-pointer"
+                 onclick="window.location='{{ url_for('tasks.edit', task_id=task.id) }}'">
+                <div>
+                    <h3 class="text-lg font-semibold {% if not task.completed %}text-white{% else %}text-gray-700{% endif %}">{{ task.title }}</h3>
+                    {% if task.due_date %}
+                    <p class="text-sm text-gray-400">Deadline: {{ task.due_date.strftime('%d.%m.%Y') }}</p>
+                    {% endif %}
+                    {% if task.priority %}
                     <span class="inline-block mt-2 px-2 py-1 text-xs rounded
-                        {% if task.priority == 'High' %}bg-red-100 text-red-600
-                        {% elif task.priority == 'Medium' %}bg-yellow-100 text-yellow-600
-                        {% else %}bg-green-100 text-green-600{% endif %}">
-                        {{ task.priority }}
-                    </span>
-                {% endif %}
+                            {% if task.priority == 'High' %}bg-red-200 text-red-700
+                            {% elif task.priority == 'Medium' %}bg-yellow-200 text-yellow-700
+                            {% else %}bg-green-200 text-green-700{% endif %}">
+                            {{ task.priority }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="mt-4 flex justify-between">
+                    {% if not task.completed %}
+                        <form method="POST" action="{{ url_for('tasks.complete') }}">
+                            <input type="hidden" name="task_id" value="{{ task.id }}">
+                            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Complete</button>
+                        </form>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('tasks.delete') }}">
+                        <input type="hidden" name="task_id" value="{{ task.id }}">
+                        <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+                    </form>
+                </div>
             </div>
-            <div class="mt-4 flex justify-between">
-                <form method="POST" action="{{ url_for('tasks.complete') }}">
-                    <input type="hidden" name="task_id" value="{{ task.id }}">
-                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">✔ Complete</button>
-                </form>
-                <form method="POST" action="{{ url_for('tasks.delete') }}">
-                    <input type="hidden" name="task_id" value="{{ task.id }}">
-                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">🗑 Delete</button>
-                </form>
-            </div>
-        </div>
-
         {% else %}
-            <p class="text-gray-500">No task yet</p>
+            <p class="text-gray-400">No task yet</p>
         {% endfor %}
     </div>
 
