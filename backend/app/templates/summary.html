@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid grid-cols-3 gap-4 text-white">
+    <div class="bg-gray-800 p-4 rounded">
+        <p class="text-sm text-gray-400">Total Tasks</p>
+        <p class="text-2xl font-bold">{{ summary.total_tasks }}</p>
+    </div>
+    <div class="bg-gray-800 p-4 rounded">
+        <p class="text-sm text-gray-400">Completed</p>
+        <p class="text-2xl font-bold">{{ summary.completed_tasks }}</p>
+    </div>
+    <div class="bg-gray-800 p-4 rounded">
+        <p class="text-sm text-gray-400">Completion Rate</p>
+        <p class="text-2xl font-bold">{{ summary.completion_rate }}%</p>
+    </div>
+</div>
+{% endblock %}

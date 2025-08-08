@@ -48,7 +48,7 @@
                           {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
                     Calendar
                 </a>
-                <a href="#"
+                <a href="{{ url_for('summary.summary') }}"
                    class="rounded-md px-3 py-2 text-sm font-medium
                           {% if current_page == 'tasks.summary' %}bg-gray-900 text-white
                           {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
@@ -78,14 +78,14 @@
                   <button class="relative flex rounded-full bg-gray-800 text-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800">
                     <span class="absolute -inset-1.5"></span>
                     <span class="sr-only">Open user menu</span>
-                    <img src=""
-                         alt="avatar" class="size-8 rounded-full" />
+                    <img src="{{ current_user.avatar_url }}"
+                         alt="Avatar" class="size-8 rounded-full" />
                   </button>
 
                   <el-menu anchor="bottom end"
                            popover
                            class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                    <a href="{{ url_for('account.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
                     <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
                   </el-menu>

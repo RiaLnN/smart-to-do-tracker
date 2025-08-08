@@ -40,11 +40,12 @@ def index_task():
 @login_required
 def add():
     if request.method == "POST":
-        title = request.form.get("title", "New task")
+        title = request.form.get("title", "New Task")
         description = request.form.get("description", "")
         due_date_str = request.form.get("due_date")
+        priority = request.form.get("priority") or None
 
-        new_task = Task(title=title, description=description, user_id=current_user.id)
+        new_task = Task(title=title, description=description, user_id=current_user.id, priority=priority)
 
         if due_date_str:
             try:
@@ -70,6 +71,8 @@ def edit(task_id):
         task.title = request.form['title']
         task.description = request.form['description']
         due_date_str = request.form.get("due_date")
+        task.priority = request.form.get("priority") or None
+
         if due_date_str:
             try:
                 task.due_date = datetime.strptime(due_date_str, "%Y-%m-%d")
@@ -77,6 +80,7 @@ def edit(task_id):
                 task.due_date = None
         else:
             task.due_date = None
+
         db.session.commit()
         return redirect(url_for('tasks.index_task'))
 

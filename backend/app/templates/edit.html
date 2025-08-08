@@ -36,12 +36,11 @@
                 </div>
                 <div>
                     <label for="priority" class="block text-sm font-medium text-gray-300">Priority</label>
-                    <select name="priority" id="priority"
-                            class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select Priority</option>
-                        <option value="High" {% if task.priority == 'High' %}selected{% endif %}>High</option>
-                        <option value="Medium" {% if task.priority == 'Medium' %}selected{% endif %}>Medium</option>
-                        <option value="Low" {% if task.priority == 'Low' %}selected{% endif %}>Low</option>
+                    <select name="priority" id="priority" class="mt-1 block w-full rounded-md border border-gray-600 bg-gray-700 text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="" {% if not task or not task.priority %}selected{% endif %}>Select Priority</option>
+                        <option value="High" {% if task and task.priority == 'High' %}selected{% endif %}>High</option>
+                        <option value="Medium" {% if task and task.priority == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="Low" {% if task and task.priority == 'Low' %}selected{% endif %}>Low</option>
                     </select>
                 </div>
 

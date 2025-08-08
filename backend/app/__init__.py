@@ -18,11 +18,14 @@ def create_app():
     from .routes.tasks import tasks_bp
     from .auth.routes import auth_bp
     from .routes.main import main_bp
-
+    from .routes.account import acc_bp
+    from .routes.summary import summary_bp
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
+    app.register_blueprint(summary_bp, url_prefix='/summary')
+    app.register_blueprint(acc_bp, url_prefix='/account')
     app.register_blueprint(main_bp)
     app.register_blueprint(tasks_bp, url_prefix='/tasks')
     app.register_blueprint(auth_bp, url_prefix="/api/auth")

@@ -9,6 +9,7 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
@@ -22,7 +23,7 @@ def register():
             return redirect(url_for("auth.register"))
 
         hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
-        new_user = User(email=email, password=hashed_password)
+        new_user = User(email=email, password=hashed_password, username=username)
         db.session.add(new_user)
         db.session.commit()
         flash("Registration successful, please log in", "success")
@@ -36,7 +37,6 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-
         user = User.query.filter_by(email=email).first()
         if not user or not check_password_hash(user.password, password):
             flash("Invalid credentials", "danger")

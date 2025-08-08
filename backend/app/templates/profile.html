@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="min-h-screen bg-gray-900 text-gray-100 py-10">
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- Profile header -->
+    <div class="flex items-center gap-6 mb-8">
+      <div class="relative group">
+        {% if user.is_authenticated and user.avatar_url %}
+          <img src="{{ user.avatar_url }}" alt="Avatar" class="w-28 h-28 rounded-full object-cover border-2 border-gray-800 shadow-sm">
+        {% else %}
+          <div class="w-28 h-28 rounded-full flex items-center justify-center bg-gray-800 text-xl font-semibold border-2 border-gray-700">
+            {{ (user.username[:1] if user.is_authenticated else 'U') | upper }}
+          </div>
+        {% endif %}
+        <span class="absolute -bottom-1 -right-1 bg-green-400 w-4 h-4 rounded-full ring-2 ring-gray-900" title="Online"></span>
+
+        <!-- Change avatar button -->
+        {% if user.is_authenticated %}
+        <form action="{{ url_for('account.upload_avatar') }}" method="post" enctype="multipart/form-data" class="absolute inset-0 flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+          <label class="cursor-pointer text-xs text-white bg-indigo-600 px-2 py-1 rounded-md">
+            Change
+            <input type="file" name="avatar" class="hidden" onchange="this.form.submit()">
+          </label>
+        </form>
+        {% endif %}
+      </div>
+
+      <div class="flex-1">
+        <h1 class="text-2xl font-semibold">{{ user.username if user.is_authenticated else "Guest" }}</h1>
+        <p class="text-sm text-gray-400 mt-1">{{ user.email if user.is_authenticated and user.email else "Email not provided" }}</p>
+
+        <div class="mt-4 flex flex-wrap gap-3">
+          <a href="{{ url_for('account.setting') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm border border-gray-700">
+            ⚙️ Settings
+          </a>
+          <a href="#" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm">
+            ✏️ Edit Profile
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Left column -->
+      <div class="md:col-span-2 space-y-6">
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+          <h2 class="text-lg font-medium mb-3">About Me</h2>
+          <p class="text-gray-300 leading-relaxed">
+            {% if user.is_authenticated and user.bio %}
+              {{ user.bio }}
+            {% else %}
+              No description yet. You can add a few words about yourself: interests, profession, or hobbies.
+            {% endif %}
+          </p>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+          <h2 class="text-lg font-medium mb-3">Statistics</h2>
+          <div class="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div class="text-2xl font-semibold">12</div>
+              <div class="text-xs text-gray-400">Tasks</div>
+            </div>
+            <div>
+              <div class="text-2xl font-semibold">3</div>
+              <div class="text-xs text-gray-400">Projects</div>
+            </div>
+            <div>
+              <div class="text-2xl font-semibold">24</div>
+              <div class="text-xs text-gray-400">Achievements</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+          <h2 class="text-lg font-medium mb-3">Contact Information</h2>
+          <ul class="space-y-2 text-gray-300">
+            <li><span class="text-gray-400">Email:</span> {{ user.email if user.is_authenticated and user.email else "—" }}</li>
+            <li><span class="text-gray-400">Role:</span> {{ user.role if user.is_authenticated and user.role else "User" }}</li>
+            <li><span class="text-gray-400">Joined:</span> {{ user.created_at.strftime('%d.%m.%Y') if user.is_authenticated and user.created_at else "—" }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <aside class="space-y-6">
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+          <h3 class="text-md font-medium mb-2">Quick Actions</h3>
+          <div class="flex flex-col gap-3">
+            <a href="#" class="text-sm px-3 py-2 bg-gray-700 rounded-md hover:bg-gray-600">Create Task</a>
+            <a href="#" class="text-sm px-3 py-2 bg-gray-700 rounded-md hover:bg-gray-600">View Projects</a>
+            <a href="#" class="text-sm px-3 py-2 bg-gray-700 rounded-md hover:bg-gray-600">Log Out</a>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700">
+          <h3 class="text-md font-medium mb-2">Recent Activity</h3>
+          <ul class="text-sm text-gray-300 space-y-2">
+              {% if recent_activity %}
+                {% for act in recent_activity %}
+                  <li class="flex justify-between items-center">
+                    <span class="text-gray-300">{{ act.icon }} {{ act.text }}</span>
+                    <span class="text-xs text-gray-500">
+                      {{ act.date.strftime('%d.%m.%Y %H:%M') if act.date else '' }}
+                    </span>
+                  </li>
+                {% endfor %}
+              {% else %}
+                <li class="text-gray-400">No activity</li>
+              {% endif %}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+{% endblock %}
