@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-gray-800 rounded-2xl shadow-lg p-8 text-white border border-gray-700 transition-transform duration-300 hover:scale-[1.01]">
+    
+    <!-- Заголовок и кнопка меню -->
+    <div class="flex justify-between items-start">
+        <h1 class="text-3xl font-extrabold tracking-tight">{{ task.title }}</h1>
+        <a href="{{ url_for('tasks.edit', task_id=task.id) }}"
+           class="text-gray-400 hover:text-white p-2 rounded-full hover:bg-gray-700 transition-colors duration-200"
+           title="Изменить">
+            &#x22EE;
+        </a>
+    </div>
+
+    <!-- Приоритет -->
+    {% if task.priority %}
+        <span class="inline-block mt-4 px-3 py-1 text-xs font-semibold rounded-full shadow-sm
+            {% if task.priority == 'High' %}bg-red-500/20 text-red-400 border border-red-500/40
+            {% elif task.priority == 'Medium' %}bg-yellow-500/20 text-yellow-400 border border-yellow-500/40
+            {% else %}bg-green-500/20 text-green-400 border border-green-500/40{% endif %}">
+            {{ task.priority }}
+        </span>
+    {% endif %}
+
+    <!-- Срок выполнения -->
+    {% if task.due_date %}
+        <div class="mt-4 flex items-center text-sm text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10m-12 4h14M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span>Term: <span class="font-medium text-gray-200">{{ task.due_date.strftime('%d.%m.%Y') }}</span></span>
+        </div>
+    {% endif %}
+
+    <!-- Описание -->
+    {% if task.description %}
+        <div class="mt-6">
+            <h2 class="text-lg font-semibold mb-2 border-b border-gray-700 pb-1">Description</h2>
+            <p class="text-gray-300 leading-relaxed whitespace-pre-line">{{ task.description }}</p>
+        </div>
+    {% else %}
+        <p class="mt-6 text-gray-500 italic">No Description</p>
+    {% endif %}
+    <div class="mt-5 flex justify-end">
+        <a href="{{ url_for('tasks.index_task') }}"
+           class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 rounded">
+            ← Back
+        </a>
+    </div>
+</div>
+
+{% endblock %}

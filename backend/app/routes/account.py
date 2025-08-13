@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, request, current_app, jsonify
 from flask_login import current_user, login_required
 from ..models.task import Task
 from werkzeug.utils import secure_filename
@@ -92,7 +92,18 @@ def profile():
         recent_activity=recent_activity[:5]
     )
 
-@acc_bp.route('/setting', methods=['GET', 'POST'])
+
+@acc_bp.route('/update_appearance', methods=['POST'])
 @login_required
-def setting():
-    return render_template('setting.html', user=current_user)
+def update_appearance():
+    theme = request.json.get('theme')
+    font_size = request.json.get('font_size')
+    density = request.json.get('density')
+
+    # Сохраняем в модель пользователя
+    current_user.theme = theme
+    current_user.font_size = font_size
+    current_user.density = density
+    db.session.commit()
+
+    return jsonify({"status": "ok"})

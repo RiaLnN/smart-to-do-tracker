@@ -13,108 +13,99 @@
 <body class="h-full">
     {% set current_page = request.endpoint %}
     <!-- Navbar -->
-    <nav class="bg-gray-800">
+    <nav class="bg-gradient-to-r from-gray-800 via-gray-850 to-gray-900 shadow-lg border-b border-gray-700">
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div class="relative flex h-16 items-center justify-between">
+
+          <!-- Mobile menu button-->
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <!-- Mobile menu button-->
-            <button type="button" command="--toggle" commandfor="mobile-menu" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
-              <span class="absolute -inset-0.5"></span>
+            <button type="button" command="--toggle" commandfor="mobile-menu"
+              class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-white hover:bg-gray-700 focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset transition-all duration-300">
               <span class="sr-only">Open main menu</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 in-aria-expanded:hidden">
-                <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6 not-in-aria-expanded:hidden">
-                <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" aria-hidden="true"
+                class="size-6 in-aria-expanded:hidden transition-transform duration-300 group-hover:rotate-90">
+                <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
             </button>
           </div>
+
+          <!-- Logo + Nav links -->
           <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div class="flex shrink-0 items-center">
-              <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" class="h-8 w-auto" />
+              <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+                   alt="Logo" class="h-8 w-auto drop-shadow-md hover:scale-105 transition-transform duration-300" />
             </div>
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
-                <a href="{{ url_for('tasks.index_task') }}"
-                   class="rounded-md px-3 py-2 text-sm font-medium
-                          {% if current_page == 'tasks.index_task' %}bg-gray-900 text-white
-                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    Dashboard
-                </a>
-
-                <a href="{{ url_for('tasks.calendar') }}"
-                   class="rounded-md px-3 py-2 text-sm font-medium
-                          {% if current_page == 'tasks.calendar' %}bg-gray-900 text-white
-                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    Calendar
-                </a>
-                <a href="{{ url_for('summary.summary') }}"
-                   class="rounded-md px-3 py-2 text-sm font-medium
-                          {% if current_page == 'tasks.summary' %}bg-gray-900 text-white
-                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    Summary
-                </a>
-                  <a href="#"
-                   class="rounded-md px-3 py-2 text-sm font-medium
-                          {% if current_page == 'tasks.not' %}bg-gray-900 text-white
-                          {% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    not now
-                </a>
-            </div>
+                {% set nav_links = [
+                  ('tasks.index_task', 'Dashboard'),
+                  ('tasks.calendar', 'Calendar'),
+                  ('summary.summary', 'Summary')
+                ] %}
+                {% for endpoint, label in nav_links %}
+                  <a href="{{ url_for(endpoint) }}"
+                     class="relative rounded-md px-3 py-2 text-sm font-medium transition-all duration-300
+                            {% if current_page == endpoint %}
+                              bg-gray-900 text-white shadow-inner
+                            {% else %}
+                              text-gray-300 hover:text-white hover:bg-gray-700
+                            {% endif %}">
+                    {{ label }}
+                    <span class="absolute left-0 bottom-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                  </a>
+                {% endfor %}
+              </div>
             </div>
           </div>
-          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
-              <span class="absolute -inset-1.5"></span>
+
+          <!-- Right side -->
+          <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 space-x-3">
+            <!-- Notifications -->
+            <button type="button"
+              class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white hover:scale-110 hover:shadow-md focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-300">
               <span class="sr-only">View notifications</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.5" aria-hidden="true"
+                class="size-6">
                 <path d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </button>
 
-            <!-- Profile dropdown -->
+            <!-- Profile -->
             {% if current_user.is_authenticated %}
-                <el-dropdown class="relative ml-3">
-                  <button class="relative flex rounded-full bg-gray-800 text-sm focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800">
-                    <span class="absolute -inset-1.5"></span>
-                    <span class="sr-only">Open user menu</span>
-                    <img src="{{ current_user.avatar_url }}"
-                         alt="Avatar" class="size-8 rounded-full" />
-                  </button>
-
-                  <el-menu anchor="bottom end"
-                           popover
-                           class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden">
-                    <a href="{{ url_for('account.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                    <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
-                  </el-menu>
-                </el-dropdown>
+              <el-dropdown class="relative">
+                <button class="relative flex rounded-full bg-gray-800 text-sm hover:scale-105 transition-transform duration-300">
+                  <img src="{{ current_user.avatar_url }}" alt="Avatar"
+                       class="size-8 rounded-full ring-2 ring-gray-700 hover:ring-blue-500 transition-all duration-300" />
+                </button>
+                <el-menu anchor="bottom end"
+                         popover
+                         class="absolute right-0 mt-2 w-48 origin-top-right rounded-lg bg-white py-1 shadow-xl ring-1 ring-black/10 focus:outline-hidden">
+                  <a href="{{ url_for('account.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                  <a href="{{ url_for('auth.logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                </el-menu>
+              </el-dropdown>
             {% else %}
-                <a href="{{ url_for('auth.login') }}"
-                   class="bg-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2">
-                   Login
-                </a>
-                <a href="{{ url_for('auth.register') }}"
-                   class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                   Register
-                </a>
+              <a href="{{ url_for('auth.login') }}" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600 transition-all duration-300">Login</a>
+              <a href="{{ url_for('auth.register') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all duration-300">Register</a>
             {% endif %}
-
           </div>
         </div>
       </div>
 
+      <!-- Mobile menu -->
       <el-disclosure id="mobile-menu" hidden class="block sm:hidden">
         <div class="space-y-1 px-2 pt-2 pb-3">
-          <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <a href="#" aria-current="page" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Dashboard</a>
-          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
-          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
-          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+          <a href="#" class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white hover:bg-gray-800 transition-all duration-300">Dashboard</a>
+          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-300">Team</a>
+          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-300">Projects</a>
+          <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 transition-all duration-300">Calendar</a>
         </div>
       </el-disclosure>
     </nav>
+
 
     <!-- Main Content -->
     <div class="container mx-auto p-4">

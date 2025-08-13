@@ -10,6 +10,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), nullable=False)
     avatar_url = db.Column(db.String(255), nullable=True)
     tasks = db.relationship("Task", backref="user", lazy=True)
+    theme = db.Column(db.String(20), default='dark')
+    font_size = db.Column(db.String(20), default='medium')
+    density = db.Column(db.String(20), default='comfortable')
 
     def __repr__(self):
         return f"<User {self.email}>"
