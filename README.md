@@ -5,6 +5,8 @@ The app provides a clean, animated, and user-friendly interface for managing tas
 
 ---
 
+## Screenshot
+![Alt text](/img.png "Scewwn of work")
 ## 🚀 Features
 
 - **User Authentication**
