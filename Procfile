@@ -1,1 +1,1 @@
-web: gunicorn -b 0.0.0.0:$PORT backend.app:create_app()
+gunicorn -b 0.0.0.0:$PORT backend.run:app
