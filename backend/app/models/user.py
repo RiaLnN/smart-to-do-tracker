@@ -1,5 +1,6 @@
 from .. import db
 from flask_login import UserMixin
+from datetime import datetime
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
@@ -12,6 +13,7 @@ class User(db.Model, UserMixin):
     tasks = db.relationship("Task", backref="user", lazy=True)
     theme = db.Column(db.String(20), default='dark')
     font_size = db.Column(db.String(20), default='medium')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     density = db.Column(db.String(20), default='comfortable')
 
     def __repr__(self):
