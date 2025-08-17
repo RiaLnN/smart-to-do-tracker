@@ -1,1 +1,1 @@
-gunicorn -b 0.0.0.0:$PORT backend.run:app
+gunicorn -b 0.0.0.0:$PORT app:app
